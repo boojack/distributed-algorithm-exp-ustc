@@ -1,0 +1,35 @@
+.App {
+  width: 100%;
+  min-height: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.node-container {
+  width: 80%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.node-item {
+  display: block;
+  padding: 6px;
+  border: 1px solid gray;
+  margin-right: 5px;
+}
+
+.node-item.finished {
+  background-color: black;
+  color: white;
+}
+
+.node-item:last-child {
+  margin-right: 0;
+}
