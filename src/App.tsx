@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { broatcast, initRootNode, Node } from "./broadcast";
+import { electLeader, initNodes } from "./optimized_async_ring_election";
 import "./App.css";
 
 function getNodesList(pr: Node): Node[][] {
@@ -31,6 +32,9 @@ function App() {
     broatcast(root, () => {
       setCount(Date.now());
     });
+    // just for test async ring election
+    const nodes = initNodes();
+    console.log(electLeader(nodes));
   }, []);
 
   return (
