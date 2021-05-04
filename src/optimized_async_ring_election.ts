@@ -15,7 +15,7 @@ export interface Message {
 
 // 采用随机 id，最后选举出来的 leader id 应该是 9
 const randomID = [5, 3, 7, 1, 6, 2, 4, 9, 0, 8];
-let id = 0;
+
 export class Node {
   public id: number;
   public terminated: boolean = false;
@@ -53,7 +53,7 @@ export function electLeader(nodes: Node[]) {
     msgBox = [];
     let tempLeader = [];
 
-    // 让所有可能成为 leader 的节点向邻居发送 probe 消息
+    // 让所有临时 leader 的节点向左右邻居发送 probe 消息
     for (let i = 0; i < nodes.length; i++) {
       if (!nodes[i].isTempLeader) {
         continue;
@@ -87,19 +87,18 @@ export function electLeader(nodes: Node[]) {
       });
     }
 
+    // 当仅有一个可以为临时 leader 的节点时，提前终止
     if (tempLeader.length === 1) {
       leader = tempLeader[0];
+      leader.isLeader = true;
       break;
     }
 
+    // 进行第 phase 轮选举
     for (let i = 0; i < 2 * Math.pow(2, phase); i++) {
       const tempMsgBox = new Array<Message>();
 
       for (const currMsg of msgBox) {
-        if (currMsg === undefined) {
-          break;
-        }
-
         const { type, receiver, senderIdx, receiverIdx, phase, hop, msg } = currMsg;
 
         const direction = (receiverIdx > senderIdx && senderIdx !== 0) || receiverIdx === 0 ? "right" : "left";

@@ -15,14 +15,11 @@ export interface Message {
 const randomID = [5, 3, 7, 1, 6, 2, 4, 9, 0, 8];
 
 export class Node {
-  static count: number = 0;
-
   public id: number;
   public terminated: boolean = false;
   public isLeader: boolean = false;
 
   constructor() {
-    // this.id = Node.count++;
     // 采用随机 id
     this.id = randomID.shift() ?? 0;
   }
@@ -45,7 +42,7 @@ export function electLeader(nodes: Node[]) {
   const msgBox = new Array<Message>();
   let leader = null;
 
-  // 1. 所有处理器向左邻居发送一个含有自己 id 的标识符
+  // 所有处理器向左邻居发送一个含有自己 id 的标识符
   for (let i = 0; i < nodes.length; i++) {
     const receiverIdx = (i - 1 + 10) % nodes.length;
 
@@ -59,6 +56,7 @@ export function electLeader(nodes: Node[]) {
     });
   }
 
+  // 处理每条 message
   while (msgBox.length > 0) {
     const currMsg = msgBox.shift();
 
@@ -67,7 +65,6 @@ export function electLeader(nodes: Node[]) {
     }
 
     const { type, receiver, msg } = currMsg;
-
     const receiverIdx = (currMsg.receiverIdx - 1 + 10) % nodes.length;
 
     if (receiver.terminated) {
