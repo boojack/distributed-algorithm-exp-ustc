@@ -51,13 +51,19 @@ export function initRootNode(k: number = 6) {
 export async function broatcast(node: Node, cb: () => any) {
   // 模拟消息传输以及处理的随机时延
   if (node.id !== 0) {
-    await wait(1000 + Math.random() * 2000);
+    await wait(Math.random() * 1000);
   }
+
+  // 视图渲染相关，与主程序逻辑无关
+  {
+    node.terminated = true;
+    cb();
+  }
+
+  // 深度优先遍历孩子节点
   for (const child of node.children) {
-    broatcast(child, cb);
+    await broatcast(child, cb);
   }
-  node.terminated = true;
-  cb();
 }
 
 function wait(time: number) {
